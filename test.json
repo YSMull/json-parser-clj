@@ -1,0 +1,331 @@
+[
+  "push:query",
+  {
+    "code": 200,
+    "result": {
+      "orders": {
+        "@dd`506711``": [
+          "公司",
+          "消费者",
+          "小型企业"
+        ]
+      },
+      "marksCount": 3,
+      "offset-limit": [
+        0,
+        20
+      ],
+      "warningResult": {
+        "hasWarning": false,
+        "result": []
+      },
+      "cacheTime": "2022-08-15 20:20:29",
+      "datasetSize": 3,
+      "extraInfo": {
+        "sqls": [
+          {
+            "type": "main",
+            "sql": "SELECT \"t1\".\"细分\" \"d0\",\n  SUM(\"t1\".\"销售额\") \"m0\"\nFROM \"订单\" \"t1\"\nGROUP BY \"t1\".\"细分\"\nFETCH FIRST 20000 ROWS ONLY",
+            "queryInfo": null,
+            "materializedInfo": {
+              "materialized": false,
+              "materializedViewIdsUsed": []
+            }
+          }
+        ]
+      },
+      "preSynthesizeResult": {
+        "paneGraphicalDesigns": [
+          [
+            [
+              [
+                {
+                  "$type": "HorzScale",
+                  "encodings": [
+                    {
+                      "role": "Dimension",
+                      "$type": "FieldDescription'",
+                      "interpretation": "Discrete",
+                      "uid": "column-0",
+                      "name": "@dd`506711``",
+                      "independence": false,
+                      "pid": "@dd`506711``",
+                      "dataType": "String",
+                      "geoRole": null,
+                      "members": 3,
+                      "axisSetting": null
+                    }
+                  ]
+                },
+                {
+                  "$type": "VertScale",
+                  "encodings": [
+                    {
+                      "role": "Measure",
+                      "$type": "FieldDescription",
+                      "interpretation": "Continuous",
+                      "uid": "row-0",
+                      "name": "@cm`506714`SUM`",
+                      "independence": false,
+                      "pid": "@cm`506714`SUM`",
+                      "dataType": "Decimal",
+                      "geoRole": null,
+                      "axisSetting": null,
+                      "min-max": [
+                        2895786.173000002,
+                        8061433.967999996
+                      ]
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "$type": "PartitionedMarkSet",
+                  "markset": {
+                    "vert-pos": {
+                      "placed": {
+                        "$type": "VertScale",
+                        "encodings": [
+                          {
+                            "role": "Measure",
+                            "$type": "FieldDescription",
+                            "interpretation": "Continuous",
+                            "uid": "row-0",
+                            "name": "@cm`506714`SUM`",
+                            "independence": false,
+                            "pid": "@cm`506714`SUM`",
+                            "dataType": "Decimal",
+                            "geoRole": null,
+                            "axisSetting": null,
+                            "min-max": [
+                              2895786.173000002,
+                              8061433.967999996
+                            ]
+                          }
+                        ]
+                      },
+                      "encoding": {
+                        "role": "Measure",
+                        "$type": "FieldDescription",
+                        "interpretation": "Continuous",
+                        "uid": "row-0",
+                        "name": "@cm`506714`SUM`",
+                        "independence": false,
+                        "pid": "@cm`506714`SUM`",
+                        "dataType": "Decimal",
+                        "geoRole": null,
+                        "axisSetting": null,
+                        "min-max": [
+                          2895786.173000002,
+                          8061433.967999996
+                        ]
+                      }
+                    },
+                    "encoding": {
+                      "$type": "FieldDescription",
+                      "name": "@id",
+                      "dataType": "Whole",
+                      "interpretation": "Discrete",
+                      "role": "Dimension",
+                      "members": []
+                    },
+                    "geoGrouping": null,
+                    "$type": "MarkSet",
+                    "geoLevel": null,
+                    "retinals": [],
+                    "group-fields": [],
+                    "coordType": "cartesian",
+                    "id": "markset-1004",
+                    "kind": "Bar",
+                    "subdataset": null,
+                    "geoRefPid": null,
+                    "horz-pos": {
+                      "placed": {
+                        "$type": "HorzScale",
+                        "encodings": [
+                          {
+                            "role": "Dimension",
+                            "$type": "FieldDescription'",
+                            "interpretation": "Discrete",
+                            "uid": "column-0",
+                            "name": "@dd`506711``",
+                            "independence": false,
+                            "pid": "@dd`506711``",
+                            "dataType": "String",
+                            "geoRole": null,
+                            "members": 3,
+                            "axisSetting": null
+                          }
+                        ]
+                      },
+                      "encoding": {
+                        "role": "Dimension",
+                        "$type": "FieldDescription'",
+                        "interpretation": "Discrete",
+                        "uid": "column-0",
+                        "name": "@dd`506711``",
+                        "independence": false,
+                        "pid": "@dd`506711``",
+                        "dataType": "String",
+                        "geoRole": null,
+                        "members": 3,
+                        "axisSetting": null
+                      }
+                    }
+                  }
+                }
+              ]
+            ]
+          ]
+        ],
+        "pivotTableConfig": {
+          "$type": "GraphicalPivotTable",
+          "marksCount": 3,
+          "nTotalCol": 3,
+          "offset-limit": [
+            0,
+            20
+          ],
+          "colTitleTree": {
+            "title": "细分",
+            "subs": [],
+            "titleArray": [
+              "@dd`506711``"
+            ],
+            "fieldNames": []
+          },
+          "nCol": 1,
+          "nPaneRow": 1,
+          "datasetSize": 3,
+          "has-measure-name-in-axis": false,
+          "partialData": false,
+          "refLineResult": {
+            "@cm`506714`SUM`": {
+              "min-max": [
+                4028057.134500007,
+                6610881.032000004
+              ],
+              "stats": [
+                {
+                  "id": "@cm`506714`SUM`_2vcQyse3QegFDQcnyQp4Xb",
+                  "extension": "table",
+                  "type": "quantile",
+                  "values": {
+                    "multipleLines": [
+                      {
+                        "value": 6610881.032000004,
+                        "name": null
+                      },
+                      {
+                        "value": 5160328.096000013,
+                        "name": null
+                      },
+                      {
+                        "value": 4028057.134500007,
+                        "name": null
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "nameToPid": {
+            "销售额": "@cm`506714`SUM`"
+          },
+          "nTotalRow": 1,
+          "rowTitleTree": null,
+          "nPaneCol": 1,
+          "paneColTitles": [],
+          "measures": [],
+          "datasetEntire": true,
+          "nRow": 1,
+          "paneRowTitles": [
+            "@cm`506714`SUM`"
+          ]
+        },
+        "smallDatasets": [
+          [
+            [
+              [
+                {
+                  "$type": "Cell",
+                  "empty": false,
+                  "nevOptions": {},
+                  "order": {
+                    "@dd`506711``": [
+                      "公司",
+                      "消费者",
+                      "小型企业"
+                    ]
+                  }
+                }
+              ]
+            ]
+          ]
+        ],
+        "retinalMembers": {},
+        "nevDatasets": [
+          [
+            [
+              [
+                {
+                  "@dd`506711``": "公司",
+                  "@cm`506714`SUM`": 5160328.096000013,
+                  "cellMeasurePids": [
+                    "@cm`506714`SUM`"
+                  ],
+                  "dimensionId": "6637aa2fcc725bfce2f5525c40989c83"
+                },
+                {
+                  "@dd`506711``": "消费者",
+                  "@cm`506714`SUM`": 8061433.967999996,
+                  "cellMeasurePids": [
+                    "@cm`506714`SUM`"
+                  ],
+                  "dimensionId": "2791a1594897aad9b41366fbcf6ecc50"
+                },
+                {
+                  "@dd`506711``": "小型企业",
+                  "@cm`506714`SUM`": 2895786.173000002,
+                  "cellMeasurePids": [
+                    "@cm`506714`SUM`"
+                  ],
+                  "dimensionId": "62f6a2d7d0c3151f4568dc1d736fcb55"
+                }
+              ]
+            ]
+          ]
+        ],
+        "orderedScaleNames": [
+          "@dd`506711``"
+        ]
+      },
+      "updateInfo": null,
+      "isTextTable": false,
+      "datasetEntire": true,
+      "ranges": {
+        "@cm`506714`SUM`": {
+          "min": 2895786.173000002,
+          "max": 8061433.967999996
+        }
+      },
+      "hides": {
+        "@dd`506711``": false,
+        "@cm`506714`SUM`": false
+      },
+      "extra": {
+        "cached": 1,
+        "cacheObject": null,
+        "cacheKey": "insight_query_61613c7609411358699085e5c52d3a82",
+        "flushTime": "2022-08-15 20:20:29",
+        "sqls": [
+          "SELECT \"t1\".\"细分\" \"d0\",\n  SUM(\"t1\".\"销售额\") \"m0\"\nFROM \"订单\" \"t1\"\nGROUP BY \"t1\".\"细分\"\nFETCH FIRST 20000 ROWS ONLY"
+        ]
+      }
+    },
+    "logPath": "https://dash.youdata.com/operation/log/2k7gdwtE6QtMq8fC2dDpt8",
+    "queryId": "pcthy62HPkBhwEkemwgLJv"
+  }
+]
