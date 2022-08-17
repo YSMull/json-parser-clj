@@ -1,6 +1,16 @@
 (ns json-parser-clj.token)
 
 ; Token 抽象，可替换，但 type 必须是固定的几个 keyword
+; :L-SQUARE-BRACKET
+; :R-SQUARE-BRACKET
+; :L-CURLY-BRACKET
+; :R-CURLY-BRACKET
+; :COMMA
+; :COLON
+; :STRING
+; :NUMBER
+; :BOOL
+; :NULL
 
 ;(defn make-token
 ;  ([type] {:type type})
@@ -16,7 +26,7 @@
   ([type] (Token. type nil))
   ([type value] (Token. type value)))
 
-(defn check-token [type token] (= type (:type token)))
+(defn look-ahead-type? [type tokens] (= type (:type (first tokens))))
 
 (defn get-token-type [token] (:type token))
 

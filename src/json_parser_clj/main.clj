@@ -1,6 +1,7 @@
 (ns json-parser-clj.main
   (:use [json-parser-clj.lexer]
-        [json-parser-clj.parser]))
+        [json-parser-clj.parser]
+        [json-parser-clj.util]))
 
 
 (defn -main
@@ -10,5 +11,5 @@
     (do
       ;(println ast)
       (println (json-minify ast))
-      (println (json-stringify ast 4))
+      (println (json-stringify ast 2))
       )))
