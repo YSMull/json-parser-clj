@@ -19,7 +19,7 @@
 (defn- p-basic [type tokens]
   (if (check-token type (first tokens))
     [[(clojure.string/lower-case (clojure.core/name type)), (get-token-val (first tokens))] (rest tokens)]
-    (throw (Exception. (str "p-string error, need " type ", get" (str (first tokens)))))))
+    (throw (Exception. (str "p-basic error, need " type ", get" (str (first tokens)))))))
 
 (defn- p-string [tokens] (p-basic :STRING tokens))
 (defn- p-number [tokens] (p-basic :NUMBER tokens))

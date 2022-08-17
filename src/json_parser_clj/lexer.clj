@@ -2,11 +2,9 @@
   (:use [json-parser-clj.token]))
 
 (defn- t-null [string]
-  (let [[a b c d & xs] string]
-    (cond
-      (= "null" (clojure.string/lower-case (str a b c d))) [(make-token :NULL) xs]
-      :else (throw (Exception. (str "null error:" string)))
-      )))
+  (if (= "null" (clojure.string/lower-case (apply str (take 4 string))))
+    [(make-token :NULL) (drop 4 string)]
+    (throw (Exception. (str "null error:" string)))))
 
 (defn- t-bool [string]
   (let [maybe-true (clojure.string/lower-case (apply str (take 4 string)))
@@ -28,25 +26,26 @@
         :else (recur (str token x) xs)
         ))))
 
-(defn- t-number [strs]
+(defn- t-number [string]
   (loop [token ""
          has-dot false
-         [x & xs :as cur] strs]
+         sign (if (= \- (first string)) -1 1)
+         [x & xs :as cur] (if (= sign -1) (rest string) string)]
     (cond
       (nil? x) [(make-token (Double/parseDouble token) nil)]
-      (Character/isDigit ^char x) (recur (str token x) has-dot xs)
+      (Character/isDigit ^char x) (recur (str token x) has-dot sign xs)
       (= (str x) ".") (if has-dot
-                        (throw (Exception. (str "number error:" strs)))
-                        (recur (str token x) true xs))
-      :else [(make-token :NUMBER (if has-dot (Double/parseDouble token) (Long/parseLong token))) cur]
+                        (throw (Exception. (str "number error:" string)))
+                        (recur (str token x) true sign xs))
+      :else [(make-token :NUMBER (* sign (if has-dot (Double/parseDouble token) (Long/parseLong token)))) cur]
       )))
 
-(defn tokenize [strs]
-  (if (empty? strs)
+(defn tokenize [string]
+  (if (empty? string)
     []
     ;else
     (loop [tokens []
-           [x & xs :as cur] strs]
+           [x & xs :as cur] string]
       (cond
         (nil? x) [tokens nil]
         (re-matches #"[ \r\t\n]" (str x)) (recur tokens xs)
@@ -59,7 +58,7 @@
         (= x \n) (let [[token res] (t-null cur)] (recur (conj tokens token) res))
         (or (= x \t) (= x \f)) (let [[token res] (t-bool cur)] (recur (conj tokens token) res))
         (= x \") (let [[token res] (t-string cur)] (recur (conj tokens token) res))
-        (Character/isDigit ^char x) (let [[token res] (t-number cur)] (recur (conj tokens token) res))
+        (or (= x \-) (Character/isDigit ^char x)) (let [[token res] (t-number cur)] (recur (conj tokens token) res))
         :else (do
                 (throw (Exception. (str "string error:" cur))))
         ))))
