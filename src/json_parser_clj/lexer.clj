@@ -10,8 +10,8 @@
   (let [maybe-true (clojure.string/lower-case (apply str (take 4 string)))
         maybe-false (clojure.string/lower-case (apply str (take 5 string)))]
     (cond
-      (= "true" maybe-true) [(make-token :BOOL "true") (drop 4 string)]
-      (= "false" maybe-false) [(make-token :BOOL "false") (drop 5 string)]
+      (= "true" maybe-true) [(make-token :BOOL true) (drop 4 string)]
+      (= "false" maybe-false) [(make-token :BOOL false) (drop 5 string)]
       :else (throw (Exception. (str "bool error:" string))))))
 
 (defn- t-string [string]

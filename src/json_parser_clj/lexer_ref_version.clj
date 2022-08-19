@@ -1,23 +1,23 @@
 (ns json-parser-clj.lexer-ref-version
   (:use [json-parser-clj.token]))
 
-(def input (ref nil))
-(def pos (ref 0))
-(def c (ref nil))
+(def input (atom nil))
+(def pos (atom 0))
+(def c (atom nil))
 
 (defn- consume []
   (do
-    (alter pos inc)
+    (swap! pos inc)
     (if (>= @pos (count @input))
-      (ref-set c :EOF)
-      (ref-set c (nth @input @pos)))))
+      (reset! c :EOF)
+      (reset! c (nth @input @pos)))))
 
 (defn- BOOL []
   (loop [bool-string ""]
     (cond
       (> (count bool-string) 5) (throw (Exception. (str "token BOOL error, pos at: " @pos " " bool-string)))
-      (and (= (count bool-string) 4) (= (clojure.string/lower-case bool-string) "true")) (make-token :BOOL "true")
-      (and (= (count bool-string) 5) (= (clojure.string/lower-case bool-string) "false")) (make-token :BOOL "false")
+      (and (= (count bool-string) 4) (= (clojure.string/lower-case bool-string) "true")) (make-token :BOOL true)
+      (and (= (count bool-string) 5) (= (clojure.string/lower-case bool-string) "false")) (make-token :BOOL false)
       :else (let [c @c]
               (do (consume)
                   (recur (str bool-string c)))))))
@@ -81,9 +81,9 @@
 
 (defn tokenize [json-string]
   (dosync
-    (ref-set input json-string)
-    (ref-set pos 0)
-    (ref-set c (nth @input @pos))
+    (reset! input json-string)
+    (reset! pos 0)
+    (reset! c (nth @input @pos))
     (loop [tokens []]
       (let [next-token (next-token)]
         (cond
