@@ -20,10 +20,7 @@
       (and (= (count bool-string) 5) (= (clojure.string/lower-case bool-string) "false")) (make-token :BOOL "false")
       :else (let [c @c]
               (do (consume)
-                  (recur (str bool-string c))))
-      )
-    )
-  )
+                  (recur (str bool-string c)))))))
 
 (defn- NULL []
   (loop [null-string ""]
@@ -32,10 +29,7 @@
       (and (= (count null-string) 4) (= (clojure.string/lower-case null-string) "null")) (make-token :NULL)
       :else (let [c @c]
               (do (consume)
-                  (recur (str null-string c))))
-      )
-    )
-  )
+                  (recur (str null-string c)))))))
 
 (defn- NUMBER []
   (let [sign (if (= @c \-) (do (consume) -1) 1)
@@ -55,23 +49,19 @@
                                   (recur (str number-string c) true))))
         :else (make-token :NUMBER (* sign (if has-dot
                                             (Double/parseDouble number-string)
-                                            (Long/parseLong number-string)))))
-      )
-    ))
+                                            (Long/parseLong number-string))))))))
 
 (defn- STRING []
   (do
     (consume)
     (loop [string ""]
       (cond
+        (= :EOF c) (throw (Exception. (str "token STRING error, pos at: " @pos)))
         (= \" @c) (do (consume) (make-token :STRING string))
         (= \\ @c) (do (consume) (let [c @c] (do (consume)
                                                 (recur (str string \\ c)))))
-        (= :EOF c) (throw (Exception. (str "token STRING error, pos at: " @pos)))
         :else (let [c @c] (do (consume)
-                              (recur (str string c))))
-        )
-      )))
+                              (recur (str string c))))))))
 
 (defn- next-token []
   (loop []
@@ -87,8 +77,7 @@
       (= @c \n) (NULL)
       (or (= @c \t) (= @c \f)) (BOOL)
       (= @c \") (STRING)
-      (or (= @c \-) (Character/isDigit ^char @c)) (NUMBER)
-      )))
+      (or (= @c \-) (Character/isDigit ^char @c)) (NUMBER))))
 
 (defn tokenize [json-string]
   (dosync
@@ -99,6 +88,4 @@
       (let [next-token (next-token)]
         (cond
           (nil? next-token) tokens
-          :else (recur (conj tokens next-token))))
-      )))
-
+          :else (recur (conj tokens next-token)))))))
