@@ -77,6 +77,7 @@
   (loop []
     (cond
       (= @c :EOF) nil
+      (or (= \space @c) (= \newline @c) (= \tab @c) (= \return @c)) (do (consume) (recur))
       (= @c \{) (do (consume) (make-token :L-CURLY-BRACKET))
       (= @c \}) (do (consume) (make-token :R-CURLY-BRACKET))
       (= @c \[) (do (consume) (make-token :L-SQUARE-BRACKET))
@@ -87,7 +88,6 @@
       (or (= @c \t) (= @c \f)) (BOOL)
       (= @c \") (STRING)
       (or (= @c \-) (Character/isDigit ^char @c)) (NUMBER)
-      (or (= \space @c) (= \newline @c) (= \tab @c) (= \return @c)) (do (consume) (recur))
       )))
 
 (defn tokenize [json-string]
