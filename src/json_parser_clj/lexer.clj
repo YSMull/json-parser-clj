@@ -48,7 +48,7 @@
            [x & xs :as cur] string]
       (cond
         (nil? x) [tokens nil]
-        (re-matches #"[ \r\t\n]" (str x)) (recur tokens xs)
+        (or (= \space x) (= \newline x) (= \tab x) (= \return x)) (recur tokens xs)
         (= x \{) (recur (conj tokens (make-token :L-CURLY-BRACKET)) xs)
         (= x \}) (recur (conj tokens (make-token :R-CURLY-BRACKET)) xs)
         (= x \[) (recur (conj tokens (make-token :L-SQUARE-BRACKET)) xs)

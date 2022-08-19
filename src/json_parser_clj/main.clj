@@ -6,10 +6,12 @@
 
 (defn -main
   []
-  (let [[tokens] (tokenize (slurp "./test.json"))
-        ast (parse tokens)]
+  (let [json-str (slurp "./test.json")]
     (do
       ;(println ast)
-      (println (json-minify ast))
-      (println (json-stringify ast 2))
-      )))
+      (dotimes [_ 5000] (tokenize json-str))
+      (time (dotimes [_ 1000] (tokenize json-str)))
+      ;(println (json-minify ast))
+      ;(println (json-stringify ast 2))
+      ))
+  )
