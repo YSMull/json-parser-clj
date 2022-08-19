@@ -1,4 +1,5 @@
 (ns json-parser-clj.main
+  (:require [json-parser-clj.lexer-ref-version :as ref-version-lexer])
   (:use [json-parser-clj.lexer]
         [json-parser-clj.parser]
         [json-parser-clj.util]))
@@ -13,12 +14,13 @@
             ast (parse tokens)] (do
                                   (println (json-minify ast))
                                   (println (json-stringify ast 2))))
+
+      (let [tokens (ref-version-lexer/tokenize json-str)
+            ast (parse tokens)] (do
+                                  (println (json-minify ast))
+                                  (println (json-stringify ast 2))))
+
       (time (dotimes [_ 1000] (tokenize json-str)))
-      (time (dotimes [_ 1000] (tokenize json-str)))
-      (time (dotimes [_ 1000] (tokenize json-str)))
-      (time (dotimes [_ 1000] (tokenize json-str)))
-      (time (dotimes [_ 1000] (tokenize json-str)))
-      (time (dotimes [_ 1000] (tokenize json-str)))
-      (time (dotimes [_ 1000] (tokenize json-str)))
+      (time (dotimes [_ 1000] (ref-version-lexer/tokenize json-str)))
       ))
   )
