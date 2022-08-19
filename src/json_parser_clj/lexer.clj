@@ -12,8 +12,7 @@
     (cond
       (= "true" maybe-true) [(make-token :BOOL "true") (drop 4 string)]
       (= "false" maybe-false) [(make-token :BOOL "false") (drop 5 string)]
-      :else (throw (Exception. (str "bool error:" string)))
-      )))
+      :else (throw (Exception. (str "bool error:" string))))))
 
 (defn- t-string [string]
   (loop [token (StringBuilder. "")
@@ -23,10 +22,9 @@
         (nil? x) (throw (Exception. (str "string error:" string)))
         (= x \") [(make-token :STRING (.toString token)) xs]
         (= x \\) (recur (-> token
-                             (.append \\)
-                             (.append (first xs)))  (rest xs))
-        :else (recur (.append token x) xs)
-        ))))
+                            (.append \\)
+                            (.append (first xs))) (rest xs))
+        :else (recur (.append token x) xs)))))
 
 (defn- t-number [string]
   (loop [token (StringBuilder. "")
@@ -35,12 +33,12 @@
          [x & xs :as cur] (if (= sign -1) (rest string) string)]
     (cond
       (Character/isDigit ^char x) (recur (.append token x) has-dot sign xs)
-      (= (str x) ".") (if has-dot
-                        (throw (Exception. (str "number error:" string)))
-                        (recur (.append token x) true sign xs))
-      ;(nil? x) [(make-token (Double/parseDouble (.toString token)) nil)]
-      :else [(make-token :NUMBER (* sign (if has-dot (Double/parseDouble (.toString token)) (Long/parseLong (.toString token))))) cur]
-      )))
+      (= x \.) (if has-dot
+                 (throw (Exception. (str "number error:" string)))
+                 (recur (.append token x) true sign xs))
+      :else [(make-token :NUMBER (* sign (if has-dot
+                                           (Double/parseDouble (.toString token))
+                                           (Long/parseLong (.toString token))))) cur])))
 
 (defn tokenize [string]
   (if (empty? string)
@@ -62,5 +60,4 @@
         (= x \") (let [[token res] (t-string cur)] (recur (conj! tokens token) res))
         (or (= x \-) (Character/isDigit ^char x)) (let [[token res] (t-number cur)] (recur (conj! tokens token) res))
         :else (do
-                (throw (Exception. (str "string error:" cur))))
-        ))))
+                (throw (Exception. (str "string error:" cur))))))))

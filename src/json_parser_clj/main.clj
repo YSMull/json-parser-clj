@@ -9,10 +9,16 @@
   []
   (let [json-str (slurp "./test.json")]
     (do
-      ;(println ast)
-      (dotimes [_ 10000] (tokenize json-str))
+      (let [[tokens] (tokenize json-str)
+            ast (parse tokens)] (do
+                                  (println (json-minify ast))
+                                  (println (json-stringify ast 2))))
       (time (dotimes [_ 1000] (tokenize json-str)))
-      ;(println (json-minify ast))
-      ;(println (json-stringify ast 2))
+      (time (dotimes [_ 1000] (tokenize json-str)))
+      (time (dotimes [_ 1000] (tokenize json-str)))
+      (time (dotimes [_ 1000] (tokenize json-str)))
+      (time (dotimes [_ 1000] (tokenize json-str)))
+      (time (dotimes [_ 1000] (tokenize json-str)))
+      (time (dotimes [_ 1000] (tokenize json-str)))
       ))
   )
