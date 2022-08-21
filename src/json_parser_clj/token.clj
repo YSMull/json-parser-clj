@@ -12,19 +12,15 @@
 ; :BOOL
 ; :NULL
 
-;(defn make-token
-;  ([type] {:type type})
-;  ([type value] {:type type :value value}))
-
-(defrecord Token [type value]
-  Object
-  (toString [_]
-    (if value (str "(" type ", " value ")") (str "(" type ")"))
-    ))
-
 (defn make-token
-  ([type] (Token. type nil))
-  ([type value] (Token. type value)))
+  ([type] {:type type})
+  ([type value] {:type type :value value}))
+
+;(defrecord Token [type value])
+;
+;(defn make-token
+;  ([type] (Token. type nil))
+;  ([type value] (Token. type value)))
 
 (defn look-ahead-type? [type tokens] (= type (:type (first tokens))))
 
