@@ -30,11 +30,11 @@
     (loop [tokens tokens
            elements []]
       (if (look-ahead-type? :R-SQUARE-BRACKET tokens)
-        (let [tokens (match :R-SQUARE-BRACKET tokens)] [[:j-array elements] tokens])
+        (let [tokens (match :R-SQUARE-BRACKET tokens)]
+          [[:j-array elements] tokens])
         ;else
         (let [[element tokens] (p-json tokens)
-              tokens (cond->> tokens
-                              (look-ahead-type? :COMMA tokens) (match :COMMA))]
+              tokens (if (and (look-ahead-type? :COMMA tokens) (not (look-ahead-ahead-type? :R-SQUARE-BRACKET tokens))) (match :COMMA tokens) tokens)]
           (recur tokens (conj elements element)))))))
 
 (defn- p-object [tokens]
@@ -47,8 +47,7 @@
         (let [[key tokens] (p-string tokens)
               [value tokens] (->> (match :COLON tokens)
                                   (p-json))
-              tokens (cond->> tokens
-                              (look-ahead-type? :COMMA tokens) (match :COMMA))]
+              tokens (if (and (look-ahead-type? :COMMA tokens) (not (look-ahead-ahead-type? :R-CURLY-BRACKET tokens))) (match :COMMA tokens) tokens)]
           (recur tokens (conj kvs [(second key) value])))))))
 
 (defn- p-json [tokens]
@@ -59,7 +58,12 @@
       :NUMBER (p-number tokens)
       :STRING (p-string tokens)
       :BOOL (p-bool tokens)
-      :NULL (p-null tokens))))
+      :NULL (p-null tokens)
+      ;(throw (Exception. (str "match next token error, got " next-token)))
+      )))
 
 (defn parse [tokens]
-  (first (p-json tokens)))
+  (let [[ast rest-tokens] (p-json tokens)]
+    (if (empty? rest-tokens)
+      ast
+      (throw (Exception. (str "extra tokens " rest-tokens))))))

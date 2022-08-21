@@ -19,26 +19,33 @@
          s (rest string)]
     (let [[x & xs] s]
       (cond
-        (nil? x) (throw (Exception. (str "string error:" string)))
+        (or (= x \newline) (= x \tab) (nil? x)) (throw (Exception. (str "string error:" (apply str string))))
         (= x \") [(make-token :STRING (.toString token)) xs]
-        (= x \\) (recur (-> token
-                            (.append \\)
-                            (.append (first xs))) (rest xs))
+        (and (= x \\)) (let [c (first xs)]
+                         (if (or (= c \\) (= c \/) (= c \b) (= c \f) (= c \n) (= c \r) (= c \t) (= c \u) (= c \"))
+                           (recur (-> token
+                                      (.append \\)
+                                      (.append c)) (rest xs))
+                           (throw (Exception. (str "string error:" (apply str string))))))
         :else (recur (.append token x) xs)))))
 
 (defn- t-number [string]
   (loop [token (StringBuilder. "")
-         has-dot false
-         sign (if (= \- (first string)) -1 1)
-         [x & xs :as cur] (if (= sign -1) (rest string) string)]
-    (cond
-      (Character/isDigit ^char x) (recur (.append token x) has-dot sign xs)
-      (= x \.) (if has-dot
-                 (throw (Exception. (str "number error:" string)))
-                 (recur (.append token x) true sign xs))
-      :else [(make-token :NUMBER (* sign (if has-dot
-                                           (Double/parseDouble (.toString token))
-                                           (Long/parseLong (.toString token))))) cur])))
+         [x & xs :as cur] string]
+    (if (or (Character/isDigit ^char x) (= x \-) (= x \+) (= x \.) (= x \e) (= x \E))
+      (recur (.append token x) xs)
+      (let [num-str (.toString token)
+            leading-zeros? (let [int-part (first (clojure.string/split num-str #"\."))]
+                             (if (= 1 (count int-part))
+                               false
+                               (.startsWith int-part "0")))
+            _ (when leading-zeros?
+                (throw (Exception. (str "leading zeros:" num-str))))
+            double? (some (fn [c] (or (= c \.) (= c \e) (= c \E))) num-str)]
+        [(make-token :NUMBER (if double?
+                               (Double/parseDouble (.toString token))
+                               (Long/parseLong (.toString token))))
+         cur]))))
 
 (defn tokenize [string]
   (if (empty? string)

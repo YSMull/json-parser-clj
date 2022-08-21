@@ -24,6 +24,8 @@
 
 (defn look-ahead-type? [type tokens] (= type (:type (first tokens))))
 
+(defn look-ahead-ahead-type? [type tokens] (= type (:type (first (rest tokens)))))
+
 (defn get-token-type [token] (:type token))
 
 (defn get-token-val [token] (:value token))
